@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sword Battle Minimalist</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="ui-layer">
+        <div id="login-panel" class="glass-panel">
+            <h1>SWORD.IO</h1>
+            <input type="text" id="username" placeholder="Enter your name" autocomplete="off">
+            <button id="join-btn">Start Battle</button>
+        </div>
+        
+        <div id="hud" class="hidden">
+            <div class="stats">Score: <span id="score">0</span></div>
+            <div class="leaderboard glass-panel">
+                <h3>Top Players</h3>
+                <ul id="lb-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

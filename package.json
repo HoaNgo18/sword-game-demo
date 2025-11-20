@@ -1,0 +1,24 @@
+{
+  "name": "20251-it4409-web",
+  "version": "1.0.0",
+  "description": "Dự án game **.io** chém kiếm thời gian thực, lấy cảm hứng từ **evowar.io** (mục tiêu học tập & mở rộng).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HoaNgo18/20251-IT4409-Web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HoaNgo18/20251-IT4409-Web/issues"
+  },
+  "homepage": "https://github.com/HoaNgo18/20251-IT4409-Web#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  }
+}
