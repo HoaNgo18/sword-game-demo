@@ -11,7 +11,9 @@ export default class Socket {
 
   setupEvents() {
     this.socket.on("connect", () => {
-      console.log("Connected to Server via Socket.io");
+      console.log("Connected to Server via Socket.io", this.socket.id);
+      // Expose our socket id on the scene so the scene can identify the local player
+      if (this.scene) this.scene.myId = this.socket.id;
     });
 
     // Nhận gói tin update vị trí từ Server (20 lần/giây)

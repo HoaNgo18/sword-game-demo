@@ -5,6 +5,7 @@ const config = require('../../config');
 class Player extends Entity {
     constructor(game, socketId, x, y) {
         super(game, x, y, config.PLAYER.RADIUS);
+        this.id = socketId;
         this.socketId = socketId; // ID của socket để gửi tin riêng
         this.username = "Unknown";
         
@@ -40,7 +41,8 @@ class Player extends Entity {
         return {
             ...super.getSnapshot(),
             type: 'player', // Để client biết đây là người chơi
-            a: this.angle 
+            a: this.angle,
+            h: Math.round(this.hp)
         };
     }
 

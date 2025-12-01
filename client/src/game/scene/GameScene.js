@@ -33,7 +33,6 @@ export default class GameScene extends Phaser.Scene {
 
   // Hàm xử lý gói tin từ Server gửi về
   processUpdate(snapshot) {
-    // Set đánh dấu để tìm những player bị disconnect
     const seenIds = new Set();
 
     snapshot.forEach((entityData) => {
@@ -41,30 +40,27 @@ export default class GameScene extends Phaser.Scene {
       seenIds.add(id);
 
       if (this.players[id]) {
-        // Player đã có -> Cập nhật vị trí đích
+        // Player đã có -> Cập nhật vị trí & góc
         this.players[id].targetX = entityData.x;
         this.players[id].targetY = entityData.y;
         this.players[id].targetAngle = entityData.a;
+        
+        // --- CẬP NHẬT MÁU ---
+        if (entityData.h !== undefined) {
+            this.players[id].updateHealth(entityData.h);
+        }
+
       } else {
         // Player chưa có -> Tạo mới
         this.players[id] = new ClientPlayer(this, entityData);
-        console.log("New player created:", id);
-      }
-      
-      // Nếu ID trùng với socket ID của mình -> Camera bám theo
-      if(this.socket.socket.id === id) {
-          console.log("Found my player! Following...", id);
-          this.cameras.main.startFollow(this.players[id], true, 0.1, 0.1);
+
+        // Nếu đây là player local của client, cho camera follow
+        if (this.socket && this.socket.socket && id === this.socket.socket.id) {
+          this.cameras.main.startFollow(this.players[id]);
+          this.cameras.main.setBounds(0, 0, 4000, 4000);
+        }
       }
     });
-
-    // Xóa player không còn trong snapshot (đã thoát)
-    for (const id in this.players) {
-      if (!seenIds.has(id)) {
-        this.players[id].destroy();
-        delete this.players[id];
-      }
-    }
   }
 
   //Ham xu ly attack
