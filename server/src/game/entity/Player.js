@@ -9,7 +9,13 @@ class Player extends Entity {
         this.username = "Unknown";
         
         // Input hiện tại từ client
-        this.input = { up: false, down: false, left: false, right: false };
+        this.input = { up: false, down: false, left: false, right: false, angle: 0 };
+        this.angle = 0; // Hướng nhìn của player
+
+        this.lastAttackTime = 0;
+        this.attackCooldown = 0.5; // 0.5 giây mới được chém 1 lần
+        this.hp = 100;
+        this.maxHp = 100;
     }
 
     update(dt) {
@@ -24,14 +30,27 @@ class Player extends Entity {
         // Giữ player không chạy ra khỏi bản đồ (Clamping)
         this.x = Math.max(0, Math.min(config.MAP_SIZE, this.x));
         this.y = Math.max(0, Math.min(config.MAP_SIZE, this.y));
+
+        // Cập nhật góc nhìn
+        this.angle = this.input.angle;
     }
 
     // Ghi đè hàm getSnapshot để thêm thông tin riêng của Player
     getSnapshot() {
         return {
             ...super.getSnapshot(),
-            type: 'player' // Để client biết đây là người chơi
+            type: 'player', // Để client biết đây là người chơi
+            a: this.angle 
         };
+    }
+
+    canAttack() {
+        const now = Date.now() / 1000;
+        if (now - this.lastAttackTime >= this.attackCooldown) {
+            this.lastAttackTime = now;
+            return true;
+        }
+        return false;
     }
 }
 

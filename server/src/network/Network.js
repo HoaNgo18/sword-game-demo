@@ -5,12 +5,20 @@ const config = require('../config');
 class Network {
     constructor(httpServer, game) {
         this.game = game;
+
+        // 1. Khởi tạo IO trước
         this.io = new Server(httpServer, {
             cors: {
-                origin: "*", // Cho phép kết nối từ mọi nguồn (quan trọng khi dev)
+                origin: "*",
                 methods: ["GET", "POST"]
             }
         });
+
+        // 2. Gán callback sau khi đã có this.io
+        this.game.onAttack = (id) => {
+            // Gửi cho tất cả mọi người (kể cả người đánh) để chạy animation
+            this.io.emit('player_attack', id);
+        }
 
         this.setupSocket();
         this.startGameLoop();
@@ -18,38 +26,30 @@ class Network {
 
     setupSocket() {
         this.io.on("connection", (socket) => {
-            console.log(`[Net] New connection: ${socket.id}`);
+            console.log(`[Net] +Conn: ${socket.id}`);
 
-            // 1. Join Game
             this.game.addPlayer(socket.id);
 
-            // 2. Handle Input từ Client
             socket.on("input", (inputData) => {
-                // inputData dạng { up: true, down: false... }
                 this.game.handleInput(socket.id, inputData);
             });
 
-            // 3. Disconnect
+            socket.on("attack", () => {
+                this.game.handleAttack(socket.id);
+            });
+
             socket.on("disconnect", () => {
-                console.log(`[Net] Disconnected: ${socket.id}`);
+                console.log(`[Net] -Disc: ${socket.id}`);
                 this.game.removePlayer(socket.id);
             });
         });
     }
 
     startGameLoop() {
-        // Vòng lặp gửi dữ liệu (Broadcast Loop)
         const interval = 1000 / config.TPS;
-        
         setInterval(() => {
-            // Bước 1: Tính toán logic game
             this.game.update();
-
-            // Bước 2: Lấy dữ liệu
             const state = this.game.getState();
-
-            // Bước 3: Gửi về TẤT CẢ client
-            // 'u' là viết tắt của 'update' để tiết kiệm băng thông
             this.io.emit("u", state); 
         }, interval);
     }

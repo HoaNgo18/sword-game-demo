@@ -21,6 +21,10 @@ export default class Socket {
         this.scene.processUpdate(packet);
       }
     });
+
+    this.socket.on("player_attack", (id) =>  {
+      this.scene.handlePlayerAttack(id);
+    })
   }
 
   // Gửi input (lên, xuống, trái, phải) lên Server

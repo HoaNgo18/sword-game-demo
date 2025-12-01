@@ -44,6 +44,7 @@ export default class GameScene extends Phaser.Scene {
         // Player đã có -> Cập nhật vị trí đích
         this.players[id].targetX = entityData.x;
         this.players[id].targetY = entityData.y;
+        this.players[id].targetAngle = entityData.a;
       } else {
         // Player chưa có -> Tạo mới
         this.players[id] = new ClientPlayer(this, entityData);
@@ -52,6 +53,7 @@ export default class GameScene extends Phaser.Scene {
       
       // Nếu ID trùng với socket ID của mình -> Camera bám theo
       if(this.socket.socket.id === id) {
+          console.log("Found my player! Following...", id);
           this.cameras.main.startFollow(this.players[id], true, 0.1, 0.1);
       }
     });
@@ -64,4 +66,11 @@ export default class GameScene extends Phaser.Scene {
       }
     }
   }
+
+  //Ham xu ly attack
+  handlePlayerAttack(id) {
+    if (this.players[id]) {
+        this.players[id].playAttackAnimation();
+    }
+}
 }
