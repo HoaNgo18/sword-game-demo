@@ -1,0 +1,16 @@
+/* client/src/index.css */
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Ẩn thanh cuộn của trình duyệt */
+  background-color: #222; /* Màu nền tối cho đỡ chói */
+  font-family: Arial, sans-serif;
+}
+
+#game-container {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+/* Các style khác cho UI React sau này */
